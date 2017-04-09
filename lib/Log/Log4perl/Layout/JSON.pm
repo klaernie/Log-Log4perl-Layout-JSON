@@ -368,9 +368,8 @@ L<Scope::Guard> or simply take care to delete old data.)
 
 =head1 HISTORY
 
-Originally created and maintained through v0.002003 by Tim Bunce
-<Tim.Bunce@pobox.com>.  Versions 0.90 and later maintained by Michael Schout
-<mschout@cpan.org>
+Originally created and maintained through v0.002003 by Tim Bunce.  Versions
+0.50 and later maintained by Michael Schout <mschout@cpan.org>
 
 =begin Pod::Coverage
 
