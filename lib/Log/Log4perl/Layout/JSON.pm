@@ -366,6 +366,12 @@ The use of C<local> ensures that contextual data doesn't stay in the MDC
 beyond the relevant scope. (For more complex cases you could use something like
 L<Scope::Guard> or simply take care to delete old data.)
 
+=head1 HISTORY
+
+Originally created and maintained through v0.002003 by Tim Bunce
+<Tim.Bunce@pobox.com>.  Versions 0.90 and later maintained by Michael Schout
+<mschout@cpan.org>
+
 =begin Pod::Coverage
 
  BUILD
