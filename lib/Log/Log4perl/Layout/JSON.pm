@@ -100,10 +100,10 @@ sub BUILD { ## no critic (RequireArgUnpacking)
 
     $self->field(delete $args->{field}) if $args->{field};
 
-	# Optionally override encoding from ascii to utf8
-	if (my $arg = $args->{utf8}) {
-		delete $args->{utf8};
-	    $self->codec( $self->codec->ascii(0)->utf8(1) );
+    # Optionally override encoding from ascii to utf8
+    if (my $arg = $args->{utf8}) {
+        delete $args->{utf8};
+        $self->codec( $self->codec->ascii(0)->utf8(1) );
     }
 
     for my $arg_name (qw(

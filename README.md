@@ -38,8 +38,8 @@ Example configuration:
     # Use canonical order for hash keys (optional)
     log4perl.appender.Test.layout.canonical = 1
 
-	# Encode the JSON hash to UTF-8
-	log4perl.appender.Test.layout.utf8 = 1
+    # Encode the JSON hash to UTF-8
+    log4perl.appender.Test.layout.utf8 = 1
 
 # DESCRIPTION
 
