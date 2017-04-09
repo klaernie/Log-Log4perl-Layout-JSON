@@ -28,7 +28,7 @@ subtest "no mdc" => sub {
     my $logger = Log::Log4perl->get_logger('foo');
 
     $logger->info('info message');
-    is_deeply $appender->string(), '{"category":"foo","class":"main","file":"10-basic.t","message":"info message","sub":"__ANON__"}'."\n";
+    is_deeply $appender->string(), '{"category":"foo","class":"main","file":"basic.t","message":"info message","sub":"__ANON__"}'."\n";
     $appender->string('');
 };
 
@@ -53,7 +53,7 @@ subtest "no mdc" => sub {
     my $logger = Log::Log4perl->get_logger('foo');
 
     $logger->info('info message');
-    is_deeply $appender->string(), '{"category":"foo","class":"main","file":"10-basic.t","message":"info message","sub":"__ANON__"}'."\n";
+    is_deeply $appender->string(), '{"category":"foo","class":"main","file":"basic.t","message":"info message","sub":"__ANON__"}'."\n";
     $appender->string('');
 };
 
@@ -82,13 +82,13 @@ subtest "with name_for_mdc" => sub {
     my $logger = Log::Log4perl->get_logger('foo');
 
     $logger->info('info message');
-    is_deeply $appender->string(), '@cee:{"category":"foo","class":"main","file":"10-basic.t","message":"info message","sub":"__ANON__"}'."\n";
+    is_deeply $appender->string(), '@cee:{"category":"foo","class":"main","file":"basic.t","message":"info message","sub":"__ANON__"}'."\n";
     $appender->string('');
 
     Log::Log4perl::MDC->get_context->{an_mdc_item}{second_level} = [ [ 42 ] ];
 
     $logger->warn('warn message');
-    is_deeply $appender->string(), '@cee:{"category":"foo","class":"main","context":{"an_mdc_item":{"second_level":[[42]]}},"file":"10-basic.t","message":"warn message","sub":"__ANON__"}'."\n";
+    is_deeply $appender->string(), '@cee:{"category":"foo","class":"main","context":{"an_mdc_item":{"second_level":[[42]]}},"file":"basic.t","message":"warn message","sub":"__ANON__"}'."\n";
     $appender->string('');
 };
 
@@ -115,13 +115,13 @@ subtest "without mdc" => sub {
     my $logger = Log::Log4perl->get_logger('foo');
 
     $logger->info('info message');
-    is_deeply $appender->string(), '@cee:{"category":"foo","class":"main","file":"10-basic.t","message":"info message","sub":"__ANON__"}'."\n";
+    is_deeply $appender->string(), '@cee:{"category":"foo","class":"main","file":"basic.t","message":"info message","sub":"__ANON__"}'."\n";
     $appender->string('');
 
     Log::Log4perl::MDC->get_context->{an_mdc_item}{second_level} = [ [ 42 ] ];
 
     $logger->warn('warn message');
-    is_deeply $appender->string(), '@cee:{"an_mdc_item":{"second_level":[[42]]},"category":"foo","class":"main","file":"10-basic.t","message":"warn message","sub":"__ANON__"}'."\n";
+    is_deeply $appender->string(), '@cee:{"an_mdc_item":{"second_level":[[42]]},"category":"foo","class":"main","file":"basic.t","message":"warn message","sub":"__ANON__"}'."\n";
     $appender->string('');
 };
 
@@ -146,7 +146,7 @@ subtest "utf8_configured_and_non_ascii_data" => sub {
 
     $logger->info('A string containing ütf8');
 
-    is_deeply $appender->string(), encode_utf8('{"category":"foo","class":"main","file":"10-basic.t","message":"A string containing ütf8","sub":"__ANON__"}')."\n";
+    is_deeply $appender->string(), encode_utf8('{"category":"foo","class":"main","file":"basic.t","message":"A string containing ütf8","sub":"__ANON__"}')."\n";
 };
 
 done_testing();

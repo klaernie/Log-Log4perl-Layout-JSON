@@ -1,146 +1,6 @@
 package Log::Log4perl::Layout::JSON;
 
-=encoding utf8
-
-=head1 NAME
-
-Log::Log4perl::Layout::JSON - Layout a log message as a JSON hash, including MDC data
-
-=head1 SYNOPSIS
-
-Example configuration:
-
-    log4perl.appender.Example.layout = Log::Log4perl::Layout::JSON
-    log4perl.appender.Example.layout.field.message = %m{chomp}
-    log4perl.appender.Example.layout.field.category = %c
-    log4perl.appender.Example.layout.field.class = %C
-    log4perl.appender.Example.layout.field.file = %F{1}
-    log4perl.appender.Example.layout.field.sub = %M{1}
-    log4perl.appender.Example.layout.include_mdc = 1
-
-See below for more configuration options.
-
-=head1 DESCRIPTION
-
-This class implements a C<Log::Log4perl> layout format, similar to
-L<Log::Log4perl::Layout::PatternLayout> except that the output is a JSON hash.
-
-The JSON hash is ASCII encoded, with no newlines or other whitespace, and is
-suitable for output, via Log::Log4perl appenders, to files and syslog etc.
-
-Contextual data in the L<Log::Log4perl::MDC> hash will be included if
-L</include_mdc> is true.
-
-=head1 LAYOUT CONFIGURATION
-
-=head2 field
-
-Specify one or more fields to include in the JSON hash. The value is a string
-containing one of more L<Log::Log4perl::Layout::PatternLayout> placeholders.
-For example:
-
-    log4perl.appender.Example.layout.field.message = %m{chomp}
-    log4perl.appender.Example.layout.field.category = %c
-    log4perl.appender.Example.layout.field.where = %F{1}:%L
-
-If no fields are specified, the default is C<message = %m{chomp}>.
-It is recommended that C<message> be the first field.
-
-=head2 prefix
-
-Specify a prefix string for the JSON. For example:
-
-    log4perl.appender.Example.layout.prefix = @cee:
-
-See http://blog.gerhards.net/2012/03/cee-enhanced-syslog-defined.html
-
-=head2 include_mdc
-
-Include the data in the Log::Log4perl::MDC hash.
-
-    log4perl.appender.Example.layout.include_mdc = 1
-
-See also L</name_for_mdc>.
-
-=head2 name_for_mdc
-
-Use this name as the key in the JSON hash for the contents of MDC data
-
-    log4perl.appender.Example.layout.name_for_mdc = mdc
-
-If not set then MDC data is placed at top level of the hash.
-
-Where MDC field names match the names of fields defined by the Log4perl
-configuration then the MDC values take precedence. This is currently construde
-as a feature.
-
-=head2 canonical
-
-If true then use canonical order for hash keys when encoding the JSON.
-
-    log4perl.appender.Example.layout.canonical = 1
-
-This is mainly intended for testing.
-
-=head2 max_json_length_kb
-
-Set the maximum JSON length in kilobytes. The default is 20KB.
-
-    log4perl.appender.Example.layout.max_json_length_kb = 3.8
-
-This is useful where some downstream system has a limit on the maximum size of
-a message.
-
-For example, rsyslog has a C<maxMessageSize> configuration parameter with a
-default of 4KB. Longer messages are simply truncated (which would corrupt the
-JSON). We use rsyslog with maxMessageSize set to 128KB.
-
-If the JSON is larger than the specified size (not including L</prefix>)
-then some action is performed to reduce the size of the JSON.
-
-Currently fields are simply removed until the JSON is within the size.
-The MDC field/fields are removed first and then the fields specified in the
-Log4perl config, in reverse order. A message is printed on C<STDERR> for each
-field removed.
-
-In future this rather dumb logic will be replaced by something smarter.
-
-=head2 utf8
-
-Switch JSON encoding from ASCII to UTF-8.
-
-=head2 EXAMPLE USING Log::Log4perl::MDC
-
-    local Log::Log4perl::MDC->get_context->{request} = {
-        request_uri => $req->request_uri,
-        query_parameters => $req->query_parameters
-    };
-
-    # ...
-
-    for my $id (@list_of_ids) {
-
-        local Log::Log4perl::MDC->get_context->{id} = $id;
-
-        do_something_useful($id);
-
-    }
-
-Using code like that shown above, any log messages produced by
-do_something_useful() will automatically include the 'contextual data',
-showing the request URI, the hash of decoded query parameters, and the current
-value of $id.
-
-If there's a C<$SIG{__WARN__}> handler setup to log warnings via C<Log::Log4perl>
-then any warnings from perl, such as uninitialized values, will also be logged
-with this context data included.
-
-The use of C<local> ensures that contextual data doesn't stay in the MDC
-beyond the relevant scope. (For more complex cases you could use something like
-L<Scope::Guard> or simply take care to delete old data.)
-
-=cut
-
+# ABSTRACT: Layout a log message as a JSON hash, including MDC data
 
 use 5.008;
 use strict;
@@ -154,7 +14,6 @@ use Log::Log4perl::Layout::PatternLayout;
 use JSON::MaybeXS;
 
 use parent qw(Log::Log4perl::Layout);
-
 
 # TODO
 #   add eval around encode
@@ -374,3 +233,146 @@ sub render {
 
 __END__
 
+=head1 SYNOPSIS
+
+Example configuration:
+
+    log4perl.appender.Example.layout = Log::Log4perl::Layout::JSON
+    log4perl.appender.Example.layout.field.message = %m{chomp}
+    log4perl.appender.Example.layout.field.category = %c
+    log4perl.appender.Example.layout.field.class = %C
+    log4perl.appender.Example.layout.field.file = %F{1}
+    log4perl.appender.Example.layout.field.sub = %M{1}
+    log4perl.appender.Example.layout.include_mdc = 1
+
+See below for more configuration options.
+
+=head1 DESCRIPTION
+
+This class implements a C<Log::Log4perl> layout format, similar to
+L<Log::Log4perl::Layout::PatternLayout> except that the output is a JSON hash.
+
+The JSON hash is ASCII encoded, with no newlines or other whitespace, and is
+suitable for output, via Log::Log4perl appenders, to files and syslog etc.
+
+Contextual data in the L<Log::Log4perl::MDC> hash will be included if
+L</include_mdc> is true.
+
+=head1 LAYOUT CONFIGURATION
+
+=head2 field
+
+Specify one or more fields to include in the JSON hash. The value is a string
+containing one of more L<Log::Log4perl::Layout::PatternLayout> placeholders.
+For example:
+
+    log4perl.appender.Example.layout.field.message = %m{chomp}
+    log4perl.appender.Example.layout.field.category = %c
+    log4perl.appender.Example.layout.field.where = %F{1}:%L
+
+If no fields are specified, the default is C<message = %m{chomp}>.
+It is recommended that C<message> be the first field.
+
+=head2 prefix
+
+Specify a prefix string for the JSON. For example:
+
+    log4perl.appender.Example.layout.prefix = @cee:
+
+See http://blog.gerhards.net/2012/03/cee-enhanced-syslog-defined.html
+
+=head2 include_mdc
+
+Include the data in the Log::Log4perl::MDC hash.
+
+    log4perl.appender.Example.layout.include_mdc = 1
+
+See also L</name_for_mdc>.
+
+=head2 name_for_mdc
+
+Use this name as the key in the JSON hash for the contents of MDC data
+
+    log4perl.appender.Example.layout.name_for_mdc = mdc
+
+If not set then MDC data is placed at top level of the hash.
+
+Where MDC field names match the names of fields defined by the Log4perl
+configuration then the MDC values take precedence. This is currently construde
+as a feature.
+
+=head2 canonical
+
+If true then use canonical order for hash keys when encoding the JSON.
+
+    log4perl.appender.Example.layout.canonical = 1
+
+This is mainly intended for testing.
+
+=head2 max_json_length_kb
+
+Set the maximum JSON length in kilobytes. The default is 20KB.
+
+    log4perl.appender.Example.layout.max_json_length_kb = 3.8
+
+This is useful where some downstream system has a limit on the maximum size of
+a message.
+
+For example, rsyslog has a C<maxMessageSize> configuration parameter with a
+default of 4KB. Longer messages are simply truncated (which would corrupt the
+JSON). We use rsyslog with maxMessageSize set to 128KB.
+
+If the JSON is larger than the specified size (not including L</prefix>)
+then some action is performed to reduce the size of the JSON.
+
+Currently fields are simply removed until the JSON is within the size.
+The MDC field/fields are removed first and then the fields specified in the
+Log4perl config, in reverse order. A message is printed on C<STDERR> for each
+field removed.
+
+In future this rather dumb logic will be replaced by something smarter.
+
+=head2 utf8
+
+Switch JSON encoding from ASCII to UTF-8.
+
+=head2 EXAMPLE USING Log::Log4perl::MDC
+
+    local Log::Log4perl::MDC->get_context->{request} = {
+        request_uri => $req->request_uri,
+        query_parameters => $req->query_parameters
+    };
+
+    # ...
+
+    for my $id (@list_of_ids) {
+
+        local Log::Log4perl::MDC->get_context->{id} = $id;
+
+        do_something_useful($id);
+
+    }
+
+Using code like that shown above, any log messages produced by
+do_something_useful() will automatically include the 'contextual data',
+showing the request URI, the hash of decoded query parameters, and the current
+value of $id.
+
+If there's a C<$SIG{__WARN__}> handler setup to log warnings via C<Log::Log4perl>
+then any warnings from perl, such as uninitialized values, will also be logged
+with this context data included.
+
+The use of C<local> ensures that contextual data doesn't stay in the MDC
+beyond the relevant scope. (For more complex cases you could use something like
+L<Scope::Guard> or simply take care to delete old data.)
+
+=begin Pod::Coverage
+
+ BUILD
+ codec
+ mdc_handler
+ render
+
+=end Pod::Coverage
+
+=cut
