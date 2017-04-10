@@ -2,6 +2,8 @@ Changes file for Log::Log4perl::Layout::JSON
 
 {{$NEXT}}
 
+0.50  2017-04-10
+
   - new mainteiner: Michael Schout
   - add "utf8" config switch which allows JSON content to be in utf8 encoding.
   - fix "off by one" caller depth in PatternLayout
