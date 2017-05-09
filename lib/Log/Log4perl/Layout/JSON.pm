@@ -381,7 +381,7 @@ For log calls with an odd number of arguments (3 or more), the first argument
 is considered the C<message> and the others are again considered
 name/value pairs.
 
-Cf. L<Log::Log4perl::Appender/Appenders Expecting Message Chunks> for more info
+See L<Log::Log4perl::Appender/Appenders Expecting Message Chunks> for more info
 on the configuration option.
 
 =head2 EXAMPLE USING Log::Log4perl::MDC
