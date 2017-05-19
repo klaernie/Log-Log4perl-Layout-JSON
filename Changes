@@ -1,6 +1,9 @@
 Changes file for Log::Log4perl::Layout::JSON
 
 {{$NEXT}}
+  - Make signature test a RELEASE or AUTHOR test only.  The test is skipped otherwise.
+  - Remove Test::Signature from test prereqs.  The test will be skipped if
+    Test::Signature is not installed.
 
 0.51  2017-05-09
   - allow structured logging, enabled if the 'warp_message' appender option is
