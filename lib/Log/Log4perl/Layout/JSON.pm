@@ -155,7 +155,7 @@ sub render {
     my $layed_out_msg = $self->_pattern_layout->render($m, $category, $priority, $caller_level);
 
     my @fields = (
-        split($self->_separator, $layed_out_msg),
+        split($self->_separator, $layed_out_msg, -1),
         @data, # append extra fields but before mdc
         $self->mdc_handler->($self) # MDC fields override non-MDC fields (not sure if this is a feature)
     );
