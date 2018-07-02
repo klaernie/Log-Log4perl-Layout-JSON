@@ -1,6 +1,8 @@
 Changes file for Log::Log4perl::Layout::JSON
 
 {{$NEXT}}
+
+0.54  2018-07-02
   - Add support for "format_prefix" option.  If this is set, then the prefix
     string will be formatted using Log::Log4perl::Layout::PatternLayout. [github #4]
 
