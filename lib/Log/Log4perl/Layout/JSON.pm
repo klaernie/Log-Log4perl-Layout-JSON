@@ -25,6 +25,7 @@ use parent qw(Log::Log4perl::Layout);
 use Class::Tiny {
 
     prefix => "",
+    format_prefix => 0,
 
     codec => sub {
         return JSON::MaybeXS->new
@@ -78,11 +79,17 @@ use Class::Tiny {
         my $message_pattern = delete $fields->{message}; ##
         my @field_patterns = map { $_ => $fields->{$_}->{value} } sort keys %$fields;
         unshift @field_patterns, message => $message_pattern->{value}
-            if $message_pattern; ##
+            if $message_pattern;  ##
 
         return Log::Log4perl::Layout::PatternLayout->new(join $self->_separator, @field_patterns);
     },
 
+    # if format_prefix is true, the prefix is a PatternLayout that itself can be formatted
+    _prefix_layout => sub {
+        my $self = shift;
+
+        return Log::Log4perl::Layout::PatternLayout->new($self->prefix);
+    },
 };
 BEGIN { push our @ISA, 'Class::Tiny::Object' }
 
@@ -107,7 +114,7 @@ sub BUILD { ## no critic (RequireArgUnpacking)
     }
 
     for my $arg_name (qw(
-        canonical prefix include_mdc name_for_mdc max_json_length_kb
+        canonical prefix include_mdc name_for_mdc max_json_length_kb format_prefix
     )) {
         my $arg = delete $args->{$arg_name}
             or next;
@@ -253,7 +260,14 @@ sub render {
         }
     }
 
-    return $self->prefix . $json . "\n";
+    my $prefix = $self->prefix;
+
+    if ($self->format_prefix) {
+        return $self->_prefix_layout->render($message) . $json . "\n";
+    }
+    else {
+        return $self->prefix . $json . "\n";
+    }
 }
 
 1;
@@ -310,6 +324,23 @@ Specify a prefix string for the JSON. For example:
     log4perl.appender.Example.layout.prefix = @cee:
 
 See http://blog.gerhards.net/2012/03/cee-enhanced-syslog-defined.html
+
+=head2 format_prefix
+
+If this is turned on, the prefix is treated as a
+L<Log::Log4perl::Layout::PatternLayout> string, and will be rendered as a
+pattern layout.
+
+For example:
+
+    log4perl.appender.Example.layout.prefix = %m{chomp} @cee: 
+    log4perl.appender.Example.layout.format_prefix = 1
+
+Would log C<Hello World> as:
+
+    Hello World @cee:{ .. MDC as JSON ... }
+
+See also L</prefix>
 
 =head2 include_mdc
 
