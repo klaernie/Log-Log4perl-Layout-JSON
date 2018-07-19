@@ -263,7 +263,7 @@ sub render {
     my $prefix = $self->prefix;
 
     if ($self->format_prefix) {
-        return $self->_prefix_layout->render($message) . $json . "\n";
+        return $self->_prefix_layout->render($message, $category, $priority, $caller_level) . $json . "\n";
     }
     else {
         return $self->prefix . $json . "\n";
