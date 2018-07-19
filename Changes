@@ -1,6 +1,8 @@
 Changes file for Log::Log4perl::Layout::JSON
 
 {{$NEXT}}
+
+0.55  2018-07-19
   - format_prefix: Pass "category", "priority" and "caller level" to prefix so that %c, %p etc
     can be rendered in the prefix [github #5].
 
