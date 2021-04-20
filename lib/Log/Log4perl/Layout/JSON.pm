@@ -162,11 +162,11 @@ sub _build_field_values {
     my($self, $field_hash) = @_;
 
     while (my($key, $value) = each %$field_hash) {
-        if (exists $value->{value}) {
-            my $subval = delete $value->{value};
-            $field_hash->{$key} = ref($subval)
-                ? $subval
-                : Log::Log4perl::Layout::PatternLayout->new($subval)
+        if (exists $value->{value} && !ref($value->{value})) {
+            $field_hash->{$key} = Log::Log4perl::Layout::PatternLayout->new($value->{value})
+        }
+        elsif (exists $value->{value} && ref($value->{value}) ne 'HASH') {
+            $field_hash->{$key} = $value->{value}
         }
         else {
             $self->_build_field_values($value)

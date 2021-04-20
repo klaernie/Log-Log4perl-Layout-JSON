@@ -41,4 +41,37 @@ subtest "no mdc" => sub {
     $appender->string('');
 };
 
+subtest "value field as hash" => sub {
+    *main::hello = sub {+{hello => 'world'}};
+
+    my $conf = q(
+        log4perl.rootLogger = INFO, Test
+        log4perl.appender.Test = Log::Log4perl::Appender::String
+        log4perl.appender.Test.layout = Log::Log4perl::Layout::JSON
+        log4perl.appender.Test.layout.canonical = 1
+        log4perl.appender.Test.layout.field.AAAA.BBBB.value = %F{1}
+        log4perl.appender.Test.layout.field.AAAA.value.CCCC = sub {\&hello}
+        log4perl.appender.Test.layout.field.value.BBBB.CCCC = %M{1}
+        log4perl.appender.Test.layout.field.AAAA.value.value = %M{1}
+        log4perl.appender.Test.layout.field.value.BBBB.value = %M{1}
+        log4perl.appender.Test.layout.field.value.value.CCCC = %M{1}
+        log4perl.appender.Test.layout.field.value.value.value = %M{1}
+    );
+    Log::Log4perl::init( \$conf );
+    Log::Log4perl::MDC->remove;
+
+    ok my $appender = Log::Log4perl->appender_by_name("Test");
+
+    my $logger = Log::Log4perl->get_logger('foo');
+
+    $logger->info('info message');
+
+    my $got = $appender->string();
+    my $expected = '{"AAAA":{"BBBB":{"value":"complex-fields.t"},"value":{"CCCC":{"hello":"world"},"value":"__ANON__"}},"value":{"BBBB":{"CCCC":"__ANON__","value":"__ANON__"},"value":{"CCCC":"__ANON__","value":"__ANON__"}}}'."\n";
+
+    is_deeply $got, $expected;
+
+    $appender->string('');
+};
+
 done_testing();
