@@ -20,9 +20,9 @@ jobs:
         with:
           perl-version: ${{ matrix.perl }}
       - run: perl -V
-      - run: git config --global user.name "TravisCI"
-      - run: git config --global user.email $HOSTNAME":not-for-mail@github-actions.com"
       - run: cpanm -q --notest Dist::Zilla
       - run: dzil authordeps --missing | cpanm -q --notest
       - run: dzil listdeps  --author --missing | cpanm --verbose --notest
+      - run: git config --global user.name "Github Tests"
+      - run: git config --global user.email not-for-mail@github-actions.com
       - run: dzil smoke --author
