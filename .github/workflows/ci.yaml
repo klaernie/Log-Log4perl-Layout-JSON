@@ -1,0 +1,25 @@
+name: Run Tests
+on:
+  push:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-latest']
+        perl: [ '5.32' ]
+    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+      - run: perl -V
+      - run: git config --global user.name "TravisCI"
+      - run: git config --global user.email $HOSTNAME":not-for-mail@github-actions.com"
+      - run: cpanm -q --notest Dist::Zilla
+      - run: dzil authordeps --missing | cpanm -q --notest
+      - run: dzil listdeps  --author --missing | cpanm --verbose --notest
+      - run: dzil smoke --author
