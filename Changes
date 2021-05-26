@@ -1,6 +1,8 @@
 Changes file for Log::Log4perl::Layout::JSON
 
 {{$NEXT}}
+
+0.58  2021-05-26
   - Fix release SIGNATURE
 
 0.57  2021-05-26
