@@ -1,16 +1,17 @@
 #!/usr/bin/env perl
 
-use Test::Most;
-
-use Log::Log4perl;
-
 use utf8;
+
 use Encode;
+use Log::Log4perl;
+use Test::Most;
+use Test::Warnings;
+
+sub hello {
+  +{ hello => 'world' };
+}
 
 subtest "no mdc" => sub {
-
-    *main::hello = sub {+{hello => 'world'}};
-
     my $conf = q(
         log4perl.rootLogger = INFO, Test
         log4perl.appender.Test = Log::Log4perl::Appender::String
@@ -42,8 +43,6 @@ subtest "no mdc" => sub {
 };
 
 subtest "value field as hash" => sub {
-    *main::hello = sub {+{hello => 'world'}};
-
     my $conf = q(
         log4perl.rootLogger = INFO, Test
         log4perl.appender.Test = Log::Log4perl::Appender::String
