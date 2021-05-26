@@ -2,7 +2,7 @@ package Log::Log4perl::Layout::JSON;
 
 # ABSTRACT: Layout a log message as a JSON hash, including MDC data
 
-use 5.008;
+use 5.010;
 use strict;
 use warnings;
 
