@@ -1,5 +1,5 @@
 package Log::Log4perl::Layout::JSON;
-$Log::Log4perl::Layout::JSON::VERSION = '0.57';
+$Log::Log4perl::Layout::JSON::VERSION = '0.58';
 # ABSTRACT: Layout a log message as a JSON hash, including MDC data
 
 use 5.010;
@@ -322,7 +322,7 @@ Log::Log4perl::Layout::JSON - Layout a log message as a JSON hash, including MDC
 
 =head1 VERSION
 
-version 0.57
+version 0.58
 
 =head1 SYNOPSIS
 
