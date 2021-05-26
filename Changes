@@ -1,6 +1,7 @@
 Changes file for Log::Log4perl::Layout::JSON
 
 {{$NEXT}}
+  - Fix release SIGNATURE
 
 0.57  2021-05-26
   - Add support for complex fields from log config (Thanks Anton Fedotov)
