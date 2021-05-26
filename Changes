@@ -1,6 +1,8 @@
 Changes file for Log::Log4perl::Layout::JSON
 
 {{$NEXT}}
+
+0.57  2021-05-26
   - Add support for complex fields from log config (Thanks Anton Fedotov)
   - Bump minimum Perl version to 5.10
 
