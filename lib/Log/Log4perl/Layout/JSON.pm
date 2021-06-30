@@ -71,6 +71,7 @@ use Class::Tiny {
 
         return $content;
     },
+    maxkb => undef,
     canonical => 0,
     include_mdc => 0,
     exclude_message => 0,
@@ -102,6 +103,14 @@ sub BUILD { ## no critic (RequireArgUnpacking)
         my $field = delete $args->{field};
         $self->_build_field_values($field);
         $self->field($field);
+    }
+
+    if ($args->{maxkb}) {
+        my $maxkb = delete $args->{maxkb};
+
+        $self->_build_maxkb_values($maxkb);
+
+        $self->maxkb($maxkb);
     }
 
     # Optionally override encoding from ascii to utf8
@@ -174,6 +183,43 @@ sub _build_field_values {
     }
 }
 
+sub _build_maxkb_values {
+    my($self, $maxkb_hash) = @_;
+
+    while (my($key, $value) = each %$maxkb_hash) {
+        if (exists $value->{value} && !ref($value->{value})) {
+            $maxkb_hash->{$key} = $value->{value};
+        }
+        else {
+            $self->_build_maxkb_values($value)
+        }
+    }
+}
+
+sub _truncate_value {
+    my($self, $value_ref, $maxkb) = @_;
+
+    return if !$value_ref || !${$value_ref};
+    return if !$maxkb;
+
+    if (ref(${$value_ref}) eq 'HASH' && ref($maxkb) eq 'HASH') {
+        while (my($maxkb_key, $maxkb_val) = each %$maxkb) {
+            next unless ${$value_ref}->{$maxkb_key};
+
+            $self->_truncate_value(\${$value_ref}->{$maxkb_key}, $maxkb_val)
+        }
+    }
+    elsif (!ref(${$value_ref}) && !ref($maxkb)) {
+        my $len = length ${$value_ref};
+        my $maxb = $maxkb * 1024;
+
+        return if $len < $maxb;
+
+        my $trunc_marker = "...[truncated, was $len chars total]...";
+        substr(${$value_ref}, $maxb - length($trunc_marker)) = $trunc_marker;
+    }
+}
+
 
 sub render {
     my($self, $message, $category, $priority, $caller_level) = @_;
@@ -212,6 +258,17 @@ sub render {
                 splice( @fields, $i, 2 );
                 last;
             }
+        }
+    }
+
+    if (my $maxkb = $self->maxkb) {
+        for ( my $i = 0; $i < $#fields; $i += 2) {
+            my($k, $v_ref) = ( $fields[$i], \$fields[$i+1] );
+
+            my $field_maxkb = $maxkb->{$k};
+            next unless $field_maxkb;
+
+            $self->_truncate_value($v_ref, $field_maxkb);
         }
     }
 
@@ -255,7 +312,7 @@ sub render {
                     $len = length $encoded;
                 }
                 else {
-                    $len = length($v) || 0;
+                    $len = defined $v ? length $v : 0;
                 }
                 next if $len <= $max_json_length/2;
 
