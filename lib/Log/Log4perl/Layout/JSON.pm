@@ -312,7 +312,7 @@ sub render {
                     $len = length $encoded;
                 }
                 else {
-                    $len = defined $v ? length $v : 0;
+                    $len = length($v) || 0;
                 }
                 next if $len <= $max_json_length/2;
 
