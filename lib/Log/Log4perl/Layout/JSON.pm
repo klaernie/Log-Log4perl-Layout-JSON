@@ -381,6 +381,9 @@ Example configuration:
     log4perl.appender.Example.layout.field.sub = %M{1}
     log4perl.appender.Example.layout.include_mdc = 1
 
+    # Optional truncation of specific fields
+    log4perl.appender.Example.layout.maxkb.message = 2
+
     # Note: Appender option!
     # log4perl.appender.Example.warp_message = 0
 
@@ -450,6 +453,17 @@ Include the data in the Log::Log4perl::MDC hash.
     log4perl.appender.Example.layout.include_mdc = 1
 
 See also L</name_for_mdc>.
+
+=head2 maxkb
+
+Use this name with the field name to specify a maximum length for a specific
+field. For example:
+
+    log4perl.appender.Example.maxkb.message = 2
+
+Will truncate message if it is more than 2048 bytes in length.  Truncated
+message will have a marker at the end like
+C<...[truncated, was $len chars total]...>
 
 =head2 name_for_mdc
 
