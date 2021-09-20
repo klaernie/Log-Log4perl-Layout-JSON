@@ -1,6 +1,8 @@
 Changes file for Log::Log4perl::Layout::JSON
 
 {{$NEXT}}
+
+0.59  2021-09-20
   - Fix possible "uninitialized" warning
   - Add "maxkb.$field" option to truncate specific fields at specified maximum
     length
