@@ -4,7 +4,7 @@ Log::Log4perl::Layout::JSON - Layout a log message as a JSON hash, including MDC
 
 # VERSION
 
-version 0.59
+version 0.60
 
 # SYNOPSIS
 
