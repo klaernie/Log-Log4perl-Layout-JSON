@@ -150,7 +150,9 @@ sub _process_field_values {
     $fields //= $self->field;
     $layed_out //= {};
 
-    while (my($field, $value) = each %$fields) {
+    for my $field (keys %$fields) {
+        my $value = $fields->{$field};
+
         if (blessed($value) and blessed($value) eq 'Log::Log4perl::Layout::PatternLayout') {
             $layed_out->{$field} = $value->render($m, $category, $priority, $caller_level);
         }
@@ -189,7 +191,8 @@ sub _build_field_values {
 sub _build_maxkb_values {
     my($self, $maxkb_hash) = @_;
 
-    while (my($key, $value) = each %$maxkb_hash) {
+    for my $key (keys %$maxkb_hash) {
+        my $value = $maxkb_hash->{$key};
         if (exists $value->{value} && !ref($value->{value})) {
             $maxkb_hash->{$key} = $value->{value};
         }
@@ -206,7 +209,8 @@ sub _truncate_value {
     return if !$maxkb;
 
     if (ref(${$value_ref}) eq 'HASH' && ref($maxkb) eq 'HASH') {
-        while (my($maxkb_key, $maxkb_val) = each %$maxkb) {
+        for my $maxkb_key (keys %$maxkb) {
+            my $maxkb_val = $maxkb->{$maxkb_key};
             next unless ${$value_ref}->{$maxkb_key};
 
             $self->_truncate_value(\${$value_ref}->{$maxkb_key}, $maxkb_val)
