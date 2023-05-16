@@ -170,7 +170,10 @@ sub _build_field_values {
 
     my($self, $field_hash) = @_;
 
-    while (my($key, $value) = each %$field_hash) {
+    for my $key (keys %$field_hash) {
+        my $value = $field_hash->{$key};
+        next unless ref $value eq 'HASH';
+
         if (exists $value->{value} && !ref($value->{value})) {
             $field_hash->{$key} = Log::Log4perl::Layout::PatternLayout->new($value->{value})
         }
