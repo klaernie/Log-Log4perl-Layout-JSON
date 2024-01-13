@@ -204,8 +204,8 @@ Originally created and maintained through v0.002003 by Tim Bunce.  Versions
 
 # SOURCE
 
-The development version is on github at [https://https://github.com/mschout/Log-Log4perl-Layout-JSON](https://https://github.com/mschout/Log-Log4perl-Layout-JSON)
-and may be cloned from [git://https://github.com/mschout/Log-Log4perl-Layout-JSON.git](git://https://github.com/mschout/Log-Log4perl-Layout-JSON.git)
+The development version is on github at [https://github.com/mschout/Log-Log4perl-Layout-JSON](https://github.com/mschout/Log-Log4perl-Layout-JSON)
+and may be cloned from [https://github.com/mschout/Log-Log4perl-Layout-JSON.git](https://github.com/mschout/Log-Log4perl-Layout-JSON.git)
 
 # BUGS
 
