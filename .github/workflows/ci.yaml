@@ -32,7 +32,7 @@ jobs:
             distribution: strawberry
           - os: 'macos-latest'
             distribution: strawberry
-    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    name: Perl ${{ matrix.perl }} (${{ matrix.distribution }}) on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up perl
