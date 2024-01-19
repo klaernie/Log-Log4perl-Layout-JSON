@@ -20,6 +20,18 @@ jobs:
           - '5.34'
           - '5.36'
           - '5.38'
+        distribution:
+          - default
+          - strawberry
+        exclude:
+          # there was no strawberry perl 5.34 released
+          - os: windows-latest
+            perl: '5.34'
+          # no need to expand strawberry on linux or macos
+          - os: 'ubuntu-latest'
+            distribution: strawberry
+          - os: 'macos-latest'
+            distribution: strawberry
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -27,8 +39,7 @@ jobs:
         uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: ${{ matrix.perl }}
-          # distribution strawberrt is ignored on all platforms but windows
-          distribution: strawberry
+          distribution: ${{ matrix.distribution }}
       - run: perl -V
       - run: git config --global user.name "Github Tests"
       - run: git config --global user.email not-for-mail@github-actions.com
@@ -37,7 +48,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/perl
-          key: cpan-deps-${{ matrix.os }}-${{ matrix.perl }}-${{ hashFiles('dist.ini') }}
+          key: cpan-deps-${{ matrix.os }}-${{ matrix.distribution }}-${{ matrix.perl }}-${{ hashFiles('dist.ini') }}
       - run: cpanm -q --notest Dist::Zilla
       - run: dzil authordeps --missing | cpanm -q --notest
       - run: dzil listdeps  --author --missing | cpanm --verbose --notest
