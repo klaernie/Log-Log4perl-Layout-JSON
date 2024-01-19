@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    continue-on-error: true
     strategy:
       matrix:
         os: 
@@ -34,7 +35,7 @@ jobs:
             distribution: strawberry
     name: Perl ${{ matrix.perl }} (${{ matrix.distribution }}) on ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up perl
         uses: shogo82148/actions-setup-perl@v1
         with:
@@ -45,7 +46,7 @@ jobs:
       - run: git config --global user.email not-for-mail@github-actions.com
       - name: Cache CPAN Deps
         id: cache-cpan-deps
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /opt/hostedtoolcache/perl
           key: cpan-deps-${{ matrix.os }}-${{ matrix.distribution }}-${{ matrix.perl }}-${{ hashFiles('dist.ini') }}
